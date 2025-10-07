@@ -2,7 +2,7 @@
 
 This repo is the starter code for the Computational Intelligence backgammon project. It includes:
 
-- **Fast game engine** (`Backgammon.py`) accelerated with Numba
+- **Fast game engine** (`backgammon.py`) accelerated with Numba
 - **Baselines**
   - `random_fast.py` — uniformly random legal move
   - `pubeval_numba.py` — Tesauro’s *pubeval* reimplemented in pure Python + Numba
@@ -44,7 +44,7 @@ The harness prints periodic win-rates and saves the best model to `checkpoints/b
 ## 2) Repository layout
 
 ```
-Backgammon.py            # Fast game engine (Numba)
+backgammon.py            # Fast game engine (Numba)
 agent.py                 # PyTorch example agent (DQN after-state) — replace/extend as you like
 train.py                 # Algorithm-agnostic training + periodic evaluation + autosave
 pubeval_numba.py         # Tesauro's pubeval (Numba); strong fixed baseline
@@ -78,12 +78,12 @@ checkpoints/             # Saved models (created automatically)
 ## 4) Engine API essentials
 
 ```python
-import Backgammon
-board = Backgammon.init_board()
-dice  = Backgammon.roll_dice()
-moves, boards = Backgammon.legal_moves(board, dice, player=+1)  # after-states
-next_board = Backgammon.update_board(board, moves[0], player=+1)
-done = Backgammon.game_over(next_board)
+import backgammon
+board = backgammon.init_board()
+dice  = backgammon.roll_dice()
+moves, boards = backgammon.legal_moves(board, dice, player=+1)  # after-states
+next_board = backgammon.update_board(board, moves[0], player=+1)
+done = backgammon.game_over(next_board)
 ```
 
 - `legal_moves` returns **all legal move sequences** for the current dice and the corresponding **after-state** boards.
@@ -162,7 +162,7 @@ Common and recommended: **always act as player +1** by flipping the board before
 - Don’t decorate `agent.action()` with `@torch.no_grad()` if you train inside it. Use a **local** `with torch.no_grad():` only around the Q-value **selection** forward pass.
 - When applying a sequence, call:
   ```python
-  board = Backgammon.update_board(board, move_seq, player)
+  board = backgammon.update_board(board, move_seq, player)
   ```
   It accepts both a single `[start, end]` or a sequence shaped `(k, 2)`.
 - For deterministic experiments, seed NumPy & Torch (dice randomness and ε-greedy still add variance).
@@ -179,4 +179,3 @@ Every `n_epochs` games, the harness evaluates and, if the win-rate improves, sav
 
 **Q: Does the engine check for illegal moves?**  
 `legal_moves` only returns legal sequences. If you post-process moves, be careful. Tournament scripts will validate legality.
-
