@@ -115,4 +115,4 @@ def train(n_games=200_000, n_epochs=5_000, n_eval=500, eval_vs="pubeval"):
 
 if __name__ == "__main__":
     # quick defaults; tweak as needed
-    train(n_games=50_000, n_epochs=2_500, n_eval=100, eval_vs="randomAgent")
+    train(n_games=50_000, n_epochs=2_500, n_eval=100, eval_vs="pubeval")
