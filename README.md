@@ -4,8 +4,8 @@ This repo is the starter code for the Computational Intelligence backgammon proj
 
 - **Fast game engine** (`backgammon.py`) accelerated with Numba
 - **Baselines**
-  - `random_fast.py` — uniformly random legal move
-  - `pubeval_numba.py` — Tesauro’s *pubeval* reimplemented in pure Python + Numba
+  - `random_player.py` — uniformly random legal move
+  - `pubeval_player.py` — Tesauro’s *pubeval* reimplemented in pure Python + Numba
 - **Training harness** (`train.py`) — algorithm-agnostic self-play + periodic evaluation + autosave
 - **Example agent** (`agent.py`) — compact PyTorch DQN that evaluates *after-states* (you can replace this with policy-gradient, actor-critic, TD(λ), etc.)
 
