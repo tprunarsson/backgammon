@@ -10,6 +10,10 @@ import random_player as randomAgent       # baseline
 import flipped_agent as flipped_util
 import agent                            # student agent (this repo's agent.py)
 
+from pathlib import Path
+CKPT_DIR = Path("checkpoints")
+CKPT_DIR.mkdir(parents=True, exist_ok=True)
+
 def plot_perf(perf, title="Training progress (win-rate vs baseline)"):
     if not perf:
         return
@@ -103,11 +107,19 @@ def train(n_games=200_000, n_epochs=5_000, n_eval=500, eval_vs="pubeval"):
             wr = evaluate(agent, baseline, n_eval, label=f"after {g} games")
             winrates.append(wr)
 
-            # save best
-            if hasattr(agent, "save") and wr > best_wr:
-                agent.save()  # saves to checkpoints/best.pt
-                best_wr = wr
-                print(f"[Checkpoint] Saved new best model at {best_wr:.3f}% win-rate.")
+            # ---- always save this eval checkpoint, plus best if improved ----
+            if hasattr(agent, "save"):
+                # 1) save per-eval checkpoint with epoch suffix
+                epoch_ckpt = CKPT_DIR / f"epoch_{g}.pt"
+                agent.save(str(epoch_ckpt))
+                print(f"[Checkpoint] Saved {epoch_ckpt}")
+
+                # 2) also update best.pt if improved
+                if wr > best_wr:
+                    best_wr = wr
+                    best_ckpt = CKPT_DIR / "best.pt"
+                    agent.save(str(best_ckpt))  # overwrite best
+                    print(f"[Best] New best: {best_wr:.3f}% — saved {best_ckpt}")
 
             if hasattr(agent, "set_eval_mode"): agent.set_eval_mode(False)
 
