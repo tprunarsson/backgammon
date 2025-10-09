@@ -34,7 +34,7 @@ By default `train.py` trains via self-play and evaluates vs **pubeval** every fe
 ```python
 if __name__ == "__main__":
     # eval_vs can be "pubeval" or "random"
-    train(n_games=50_000, n_epochs=2_500, n_eval=400, eval_vs="random")
+    train(n_games=250_000, n_epochs=2_500, n_eval=100, eval_vs="pubeval")
 ```
 
 The harness prints periodic win-rates and saves the best model to `checkpoints/best.pt`.
