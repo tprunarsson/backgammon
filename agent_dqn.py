@@ -69,18 +69,28 @@ def _flip_move(move):
 class ReplayBuffer:
     def __init__(self, capacity):
         self.buf = deque(maxlen=capacity)
+
     def push(self, s, r, s_next, done):
-        self.buf.append((s, r, s_next, done))
+        # Normalize types to avoid np.bool_ surprises downstream
+        self.buf.append((s, float(r), s_next, bool(done)))
+
     def __len__(self):
         return len(self.buf)
+
     def sample(self, batch_size):
         batch = random.sample(self.buf, batch_size)
         s, r, s2, d = zip(*batch)
+
+        # Explicit, dense arrays (types are important here)
+        S  = np.stack(s).astype(np.float32, copy=False)
+        S2 = np.stack(s2).astype(np.float32, copy=False)
+        D  = np.asarray(d, dtype=np.bool_)   # <— key line
+
         return (
-            torch.as_tensor(np.stack(s),  dtype=torch.float32, device=CFG.device),
-            torch.as_tensor(r,           dtype=torch.float32, device=CFG.device).unsqueeze(1),
-            torch.as_tensor(np.stack(s2), dtype=torch.float32, device=CFG.device),
-            torch.as_tensor(d,           dtype=torch.bool,     device=CFG.device).unsqueeze(1),
+            torch.as_tensor(S,  dtype=torch.float32, device=CFG.device),
+            torch.as_tensor(r,  dtype=torch.float32, device=CFG.device).unsqueeze(1),
+            torch.as_tensor(S2, dtype=torch.float32, device=CFG.device),
+            torch.from_numpy(D).to(device=CFG.device).unsqueeze(1),  # <— avoids the error
         )
 
 # ------------- Model (IDENTICAL architecture to your agent.py) -------------
@@ -259,7 +269,7 @@ def action(board_copy, dice, player, i, train=False, train_config=None):
             s_next = _s_next_after_opponent(chosen_board_plus_one)
         else:
             s_next = s_after  # masked by 'done'
-        _buf.push(s_after, float(r), s_next, done)
+        _buf.push(s_after, float(r), s_next, bool(done))
         _steps += 1
         _maybe_learn()
 
