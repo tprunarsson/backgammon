@@ -259,7 +259,7 @@ def action(board_copy, dice, player, i, train=False, train_config=None):
             s_next = _s_next_after_opponent(chosen_board_plus_one)
         else:
             s_next = s_after  # masked by 'done'
-        _buf.push(s_after, r, s_next, done)
+        _buf.push(s_after, float(r), s_next, done)
         _steps += 1
         _maybe_learn()
 
