@@ -152,6 +152,7 @@ if __name__ == "__main__":
         "random_player",
         "pubeval_player",
         "agent_ac_submit",   # your AC submit-only agent
+        "agent_td_lambda_submit",
         # "agent_dqn_submit",  # add if you have a DQN submit-only agent
     ]
     run_round_robin(AGENTS, games_per_pair=1000, commentary_every=None, seed=123)
