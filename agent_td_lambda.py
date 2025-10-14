@@ -4,8 +4,9 @@
 Actor–Critic with TD(λ) eligibility traces — faithful to the original script,
 adapted to the train.py harness (online updates inside action()).
 
-- Keep the original parameterization (w1,w2,b1,b2).
-- Preserve one_hot_encoding, greedy_policy (sampling) and greedy_action (eval).
+- Keep the original parameterization (w1,w2,b1,b2) for the critic and
+  (theta_w1, theta_w2, theta_b1, theta_b2) for the actor.
+- Preserve one_hot_encoding, softmax_policy (sampling) and greedy_action (eval).
 - Maintain separate eligibility traces for +1 POV and 'flipped' (-1) updates.
 - Move-level updates replicate the original: use stored theta grads from the
   *previous* step per side, multiply traces by γλ, and apply TD error δ.
