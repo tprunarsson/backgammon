@@ -8,7 +8,7 @@ import backgammon
 import pubeval_player as pubeval         # baseline
 import random_player as randomAgent       # baseline
 import flipped_agent as flipped_util
-import agent                            # student agent (this repo's agent.py)
+import agent_td_lambda as agent                            # student agent (this repo's agent.py)
 
 from pathlib import Path
 CKPT_DIR = Path("checkpoints")
@@ -127,4 +127,4 @@ def train(n_games=200_000, n_epochs=5_000, n_eval=500, eval_vs="pubeval"):
 
 if __name__ == "__main__":
     # quick defaults; tweak as needed
-    train(n_games=50_000, n_epochs=2_500, n_eval=100, eval_vs="pubeval")
+    train(n_games=1_000_000, n_epochs=5000, n_eval=100, eval_vs="pubeval")
