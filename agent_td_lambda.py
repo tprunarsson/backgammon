@@ -100,7 +100,7 @@ _eval_mode = False
 
 # -------------------- Save / Load (for train.py checkpoints) --------------------
 from pathlib import Path
-CKPT_DEFAULT = Path("checkpoints/td_lambda.pt")
+CKPT_DEFAULT = Path("checkpoints/agent_td_lambda.pt")
 
 def save(path: str | None = None):
     p = Path(path) if path else CKPT_DEFAULT
